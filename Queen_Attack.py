@@ -107,6 +107,62 @@ def right(queen_position, board_length, obstacles):
 	return count
 
 
+def up_right(queen_position, board_length, obstacles):
+	count = 0
+	rq = queen_position[0] + 1
+	cq = queen_position[1] + 1
+	while rq <= board_length and cq <= board_length:
+		if _isObstacles(rq, cq, obstacles):
+			rq += 1
+			cq += 1
+			count += 1
+		else:
+			break
+	return count
+
+
+def up_left(queen_position, board_length, obstacles):
+	count = 0
+	rq = queen_position[0] + 1
+	cq = queen_position[1] - 1
+	while rq <= board_length and cq >= 1:
+		if _isObstacles(rq, cq, obstacles):
+			rq += 1
+			cq -= 1
+			count += 1
+		else:
+			break
+	return count
+
+
+def down_right(queen_position, board_length, obstacles):
+	count = 0
+	rq = queen_position[0] - 1
+	cq = queen_position[1] + 1
+	while rq >= 1 and cq <= board_length:
+		if _isObstacles(rq, cq, obstacles):
+			rq -= 1
+			cq += 1
+			count += 1
+		else:
+			break
+	return count
+
+
+def down_left(queen_position, obstacles):
+	count = 0
+	rq = queen_position[0] - 1
+	cq = queen_position[1] - 1
+	while rq >= 1 and cq >= 1:
+		if _isObstacles(rq, cq, obstacles):
+			rq -= 1
+			cq -= 1
+			count += 1
+		else:
+			break
+	return count
+
+
 def _length(line):
 	if len(line) == 2:
 		return True
@@ -151,5 +207,6 @@ if __name__ == '__main__':
 	first_input = board_and_obstacles()
 	second_input = queen_position(first_input[0])
 	third_input = obstacle_position(first_input[0], first_input[1], second_input)
-	queen_attack = up(second_input, first_input[0], third_input) + down(second_input, third_input) + left(second_input, third_input) + right(second_input, first_input[0], third_input) 
+	queen_attack = up(second_input, first_input[0], third_input) + down(second_input, third_input) + left(second_input, third_input) + right(second_input, first_input[0], third_input) + up_right(second_input, first_input[0], third_input) + up_left(second_input, first_input[0], third_input) + down_right(second_input, first_input[0], third_input) + down_left(second_input, third_input)
 	print(queen_attack)
+	archive.close()
