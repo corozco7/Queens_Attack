@@ -13,7 +13,9 @@ def board_and_obstacles():
 			first_line = _conversion(first_line)
 			if first_line[0] > 0 and first_line[0] <= 100000:
 				if first_line[1] >= 0 and first_line[1] <= 100000:
-					if first_line[1] < first_line[0]**2:
+					if first_line[0] == 1 and first_line[1] > 0:
+						_error("There is no place for the queen")
+					elif first_line[1] < first_line[0]**2:
 						return first_line
 					else:
 						_error("There is no place for the queen")
@@ -30,14 +32,32 @@ def queen_position(board_length):
 	if _length(second_line):
 		if _isdigit(second_line):
 			second_line = _conversion(second_line)
-			if second_line[0] <= board_length and second_line[1] <= board_length:
+			if _board_out(second_line, board_length, "The queen is outside the board"):
 				return second_line
-			else:
-				_error("The queen is outside the board")
 			
 
-def validate3():
-	pass
+def obstacle_position(board_length, obstacles, queen_position):
+	lines = []
+	count = 1
+	if obstacles > 0 :	
+		for line in archive.readlines():
+			line = line.rstrip("\n")
+			line = line.split("  ")
+			if _length(line):
+				if _isdigit(line):
+					line = _conversion(line)
+					if _board_out(line, board_length, "The obstacle is outside the board"):
+						if line == queen_position:
+							_error("The obstacle cannot have the same position as the queen")
+						elif count == obstacles:
+							lines.append(line)
+							break
+						else:
+							lines.append(line)
+							count += 1
+		return lines
+	else:
+		return lines
 
 
 def _length(line):
@@ -58,6 +78,13 @@ def _conversion(line):
 	return [int(line[0]), int(line[1])]
 
 
+def _board_out(line, board_length, error):
+	if line[0] <= board_length and line[1] <= board_length:
+		return True
+	else:
+		_error(error)
+
+
 def _error(error):
 	print(error)
 	sys.exit()
@@ -68,3 +95,5 @@ if __name__ == '__main__':
 	print(first_input)
 	second_input = queen_position(first_input[0])
 	print(second_input)
+	third_input = obstacle_position(first_input[0], first_input[1], second_input)
+	print(third_input)
