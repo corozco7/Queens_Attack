@@ -38,7 +38,6 @@ def queen_position(board_length):
 
 def obstacle_position(board_length, obstacles, queen_position):
 	lines = []
-	count = 1
 	if obstacles > 0 :	
 		for line in archive.readlines():
 			line = line.rstrip("\n")
@@ -49,15 +48,63 @@ def obstacle_position(board_length, obstacles, queen_position):
 					if _board_out(line, board_length, "The obstacle is outside the board"):
 						if line == queen_position:
 							_error("The obstacle cannot have the same position as the queen")
-						elif count == obstacles:
-							lines.append(line)
+						elif len(lines) == obstacles:
 							break
 						else:
 							lines.append(line)
-							count += 1
+		if obstacles > len(lines):
+			_error("Missing obstacles")
 		return lines
 	else:
 		return lines
+
+
+def up(queen_position, board_length, obstacles):
+	count = 0
+	rq = queen_position[0] + 1
+	while rq <= board_length:
+		if _isObstacles(rq, queen_position[1], obstacles):
+			rq += 1
+			count += 1
+		else:
+			break
+	return count
+
+
+def down(queen_position, obstacles):
+	count = 0
+	rq = queen_position[0] - 1
+	while rq >= 1:
+		if _isObstacles(rq, queen_position[1], obstacles):
+			rq -= 1
+			count += 1
+		else:
+			break
+	return count
+
+
+def left(queen_position, obstacles):
+	count = 0
+	cq = queen_position[1] - 1
+	while cq >= 1:
+		if _isObstacles(queen_position[0], cq, obstacles):
+			cq -= 1
+			count += 1
+		else:
+			break
+	return count
+
+
+def right(queen_position, board_length, obstacles):
+	count = 0
+	cq = queen_position[1] + 1
+	while cq <= board_length:
+		if _isObstacles(queen_position[0], cq, obstacles):
+			cq += 1
+			count += 1
+		else:
+			break
+	return count
 
 
 def _length(line):
@@ -85,6 +132,16 @@ def _board_out(line, board_length, error):
 		_error(error)
 
 
+def _isObstacles(rq, cq, obstacles):
+	var = True
+	compare = [rq, cq]
+	for x in obstacles:
+		if compare == x:
+			var = False
+			break
+	return var
+
+
 def _error(error):
 	print(error)
 	sys.exit()
@@ -92,8 +149,7 @@ def _error(error):
 
 if __name__ == '__main__':
 	first_input = board_and_obstacles()
-	print(first_input)
 	second_input = queen_position(first_input[0])
-	print(second_input)
 	third_input = obstacle_position(first_input[0], first_input[1], second_input)
-	print(third_input)
+	queen_attack = up(second_input, first_input[0], third_input) + down(second_input, third_input) + left(second_input, third_input) + right(second_input, first_input[0], third_input) 
+	print(queen_attack)
