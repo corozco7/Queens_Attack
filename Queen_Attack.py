@@ -5,9 +5,21 @@ archive = open("input.txt", "r")
 
 
 def board_and_obstacles():
+	"""Returns a list with the size of board and number of obstacles.
+
+	Extract the first line of a file that contains two space-separated integers, validated as follows:
+	
+	-Only 2 numbers
+	-Only Integers
+	-The board size (n) must be 0 < n <= 100000
+	-The amount of obstacles (k) must be 0 <= k <= 100000
+	-There should be no obstacles when the board size is 1
+	-The amount of obstacles must be k < n^2
+
+	"""
 	first_line = archive.readline()
 	first_line = first_line.rstrip("\n")
-	first_line = first_line.split("  ")
+	first_line = first_line.split(" ")
 	if _length(first_line):
 		if _isdigit(first_line):
 			first_line = _conversion(first_line)
@@ -26,9 +38,18 @@ def board_and_obstacles():
 
 
 def queen_position(board_length):
+	"""Returns a list with the position of the queen.
+	
+	Extract the second line of a file that contains two space-separated integers, validated as follows:
+
+	-Only 2 numbers
+	-Only Integers
+	-Queen's position must inside the board (rq <= n, cq <= n)
+
+	"""
 	second_line = archive.readline()
 	second_line = second_line.rstrip("\n")
-	second_line = second_line.split("  ")
+	second_line = second_line.split(" ")
 	if _length(second_line):
 		if _isdigit(second_line):
 			second_line = _conversion(second_line)
@@ -37,11 +58,24 @@ def queen_position(board_length):
 			
 
 def obstacle_position(board_length, obstacles, queen_position):
+	"""Returns a list of arrays with the positions of the obstacles.
+
+
+	Extract from the third line onwards from a file, two space-separated integers in each line, validated as follows:
+
+	-Returns an empty array if k = 0
+	-Only 2 numbers in each line
+	-Only Integers in each line
+	-Obstacle's position must be inside the board (rk <= n, ck <= n)
+	-Obstacle's position should not be the same as the queen
+	-The length of the returned list must be the same as the number of obstacles
+
+	"""
 	lines = []
 	if obstacles > 0 :	
 		for line in archive.readlines():
 			line = line.rstrip("\n")
-			line = line.split("  ")
+			line = line.split(" ")
 			if _length(line):
 				if _isdigit(line):
 					line = _conversion(line)
@@ -60,6 +94,7 @@ def obstacle_position(board_length, obstacles, queen_position):
 
 
 def up(queen_position, board_length, obstacles):
+	"""Returns the amount of squares that the queen can move towards up, stop counting when an obstacle is found."""
 	count = 0
 	rq = queen_position[0] + 1
 	while rq <= board_length:
@@ -72,6 +107,7 @@ def up(queen_position, board_length, obstacles):
 
 
 def down(queen_position, obstacles):
+	"""Returns the amount of squares that the queen can move towards down, stop counting when an obstacle is found."""
 	count = 0
 	rq = queen_position[0] - 1
 	while rq >= 1:
@@ -84,6 +120,7 @@ def down(queen_position, obstacles):
 
 
 def left(queen_position, obstacles):
+	"""Returns the amount of squares that the queen can move towards left, stop counting when an obstacle is found."""
 	count = 0
 	cq = queen_position[1] - 1
 	while cq >= 1:
@@ -96,6 +133,7 @@ def left(queen_position, obstacles):
 
 
 def right(queen_position, board_length, obstacles):
+	"""Returns the amount of squares that the queen can move towards right, stop counting when an obstacle is found."""
 	count = 0
 	cq = queen_position[1] + 1
 	while cq <= board_length:
@@ -108,6 +146,7 @@ def right(queen_position, board_length, obstacles):
 
 
 def up_right(queen_position, board_length, obstacles):
+	"""Returns the amount of squares that the queen can move to the right diagonal up, stop counting when an obstacle is found."""
 	count = 0
 	rq = queen_position[0] + 1
 	cq = queen_position[1] + 1
@@ -122,6 +161,7 @@ def up_right(queen_position, board_length, obstacles):
 
 
 def up_left(queen_position, board_length, obstacles):
+	"""Returns the amount of squares that the queen can move to the left diagonal up, stop counting when an obstacle is found."""
 	count = 0
 	rq = queen_position[0] + 1
 	cq = queen_position[1] - 1
@@ -136,6 +176,7 @@ def up_left(queen_position, board_length, obstacles):
 
 
 def down_right(queen_position, board_length, obstacles):
+	"""Returns the amount of squares that the queen can move to the right diagonal down, stop counting when an obstacle is found."""
 	count = 0
 	rq = queen_position[0] - 1
 	cq = queen_position[1] + 1
@@ -150,6 +191,7 @@ def down_right(queen_position, board_length, obstacles):
 
 
 def down_left(queen_position, obstacles):
+	"""Returns the amount of squares that the queen can move to the left diagonal down, stop counting when an obstacle is found."""
 	count = 0
 	rq = queen_position[0] - 1
 	cq = queen_position[1] - 1
@@ -164,6 +206,7 @@ def down_left(queen_position, obstacles):
 
 
 def _length(line):
+	"""Validate if there are only 2 numbers on the line."""
 	if len(line) == 2:
 		return True
 	else:
@@ -171,17 +214,20 @@ def _length(line):
 
 
 def _isdigit(line):
+	"""Validate if the numbers are integers"""
 	if line[0].isdigit() and line[1].isdigit():
 		return True
 	else:
-		_error("Only numbers are accepted")
+		_error("Only integers are accepted")
 
 
 def _conversion(line):
+	"""Turn the strings into integers"""
 	return [int(line[0]), int(line[1])]
 
 
 def _board_out(line, board_length, error):
+	"""Validate if the piece is off the board"""
 	if line[0] <= board_length and line[1] <= board_length:
 		return True
 	else:
@@ -189,6 +235,7 @@ def _board_out(line, board_length, error):
 
 
 def _isObstacles(rq, cq, obstacles):
+	"""Validate if an obstacle is found"""
 	var = True
 	compare = [rq, cq]
 	for x in obstacles:
@@ -199,6 +246,7 @@ def _isObstacles(rq, cq, obstacles):
 
 
 def _error(error):
+	"""Print an error and close the program"""
 	print(error)
 	sys.exit()
 
